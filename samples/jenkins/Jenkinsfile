@@ -605,7 +605,7 @@ line3'''
             steps {
                 javadoc javadocDir: 'complete/build/docs/javadoc', keepAll: true
             }
-        }	
+        }    
         //Kube-ctl
         stage('Check Docker') {
             steps {
@@ -749,10 +749,28 @@ line3'''
                 version: '1.12'
             }
         }
-    }
-}
+        //Nodejs stage
+        stage('Generate package.json') {
+            steps {
+                script {
+                    // Create a valid JSON package.json file without comments
+                    def packageJson = '''{
+                      "name": "test-nodejs-plugin",
+                      "version": "1.0.0",
+                      "description": "Sample project to test NodeJS plugin in Jenkins",
+                      "scripts": {
+                        "test": "echo \\"Running tests...\\" && exit 0"
+                      },
+                      "dependencies": {
+                        "lodash": "^4.17.21"
+                      }
+                    }'''
+                    writeFile(file: 'package.json', text: packageJson)
+                }
 
-        //Nodejs conversion Step
+            }
+        }
+
         stage('Install Packages') {
             steps {
                 // Set up the NodeJS environment
